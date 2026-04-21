@@ -40,7 +40,7 @@ const { data: balance } = useReadContract({
   address: USDC_ADDRESS as `0x${string}`,
   abi: erc20Abi,
   functionName: 'balanceOf',
-  args: [address as `0x${string}`],
+  args: [address!],
   query: {
     enabled: !!address,
   },
