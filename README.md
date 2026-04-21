@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ArcCrossPay: Cross-Border USDC Payment Tool on Arc Testnet
 
-## Getting Started
+ArcCrossPay is a cross-border USDC payment tool designed for freelancers and SMEs, built on Circle's Arc Testnet. It allows users to create payment requests and share simple payment links with payers.
 
-First, run the development server:
+## Features
+- **USDC-Native Gas**: Built on Arc, where USDC is used for both the payment and the transaction fees.
+- **Trackable Payments**: Each payment request generates a unique ID tracked via an onchain wrapper contract.
+- **Onchain Verification**: The system automatically verifies payments by fetching transaction receipts and decoding events.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Prerequisites
+- Node.js installed
+- A Circle Console account (https://console.circle.com/)
+- A browser wallet with Arc Testnet support (e.g., MetaMask, Rabby)
+- Arc Testnet USDC (Get from https://faucet.circle.com/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone and install dependencies**:
+   ```bash
+   cd arccrosspay
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Configure Environment Variables**:
+   Copy `.env.local.example` to `.env.local` and fill in your Circle API Key and Entity Secret.
+   ```bash
+   cp .env.local.example .env.local
+   ```
 
-## Learn More
+3. **Deploy the Smart Contract**:
+   This tool requires an onchain contract to track payments. Use the built-in admin route to deploy it using Circle's Smart Contract Platform:
+   ```bash
+   # Run the server
+   npm run dev
+   # In another terminal or browser, call the deploy API
+   curl -X POST http://localhost:3000/api/admin/deploy
+   ```
+   **Note**: Copy the `contractAddress` from the response and update `CROSS_PAY_ADDRESS` in `app/pay/[id]/page.tsx`.
 
-To learn more about Next.js, take a look at the following resources:
+4. **Fund your Deployer Wallet**:
+   The `api/admin/deploy` response will provide a `deployerWallet` address. Fund this address with Arc Testnet USDC from the faucet to pay for contract deployment.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Freelancer**: Visit `/` to create a new payment request.
+2. **Share**: Copy the generated link and send it to the payer.
+3. **Payer**: Open the link, connect wallet, and complete the 2-step process (Approve & Pay).
+4. **Verified**: The system will automatically verify the transaction onchain and update the status to "Paid".
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tech Stack
+- **Frontend**: Next.js, Tailwind CSS, Lucide icons
+- **Blockchain**: Arc Testnet (EVM)
+- **Web3**: viem, wagmi, TanStack Query
+- **Circle SDKs**: Smart Contract Platform, Developer-Controlled Wallets
