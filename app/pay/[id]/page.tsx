@@ -35,11 +35,15 @@ export default function PaymentPage() {
   const { switchChain } = useSwitchChain();
 
   // USDC balance
+// USDC balance
 const { data: balance } = useReadContract({
   address: USDC_ADDRESS as `0x${string}`,
   abi: erc20Abi,
   functionName: 'balanceOf',
-  args: [address],
+  args: [address as `0x${string}`],
+  query: {
+    enabled: !!address,
+  },
 })
   const { writeContract: writeApprove, data: approveHash, isPending: isApprovePending } = useWriteContract();
   const { isSuccess: isApproveSuccess, isLoading: isApproveConfirming } = useWaitForTransactionReceipt({ hash: approveHash });
@@ -151,7 +155,7 @@ const { data: balance } = useReadContract({
             <div className="space-y-4">
               {balance && (
                 <p className="text-sm text-slate-500">
-                  Your Balance: {formatUnits(balance.value, 6)} USDC
+                  Your Balance: {formatUnits(balance, 6)} USDC
                 </p>
               )}
               
