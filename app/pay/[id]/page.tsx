@@ -35,9 +35,11 @@ export default function PaymentPage() {
 
   // USDC balance
   const { data: balance } = useBalance({
-    address,
-    token: USDC_ADDRESS as `0x${string}`,
-  });
+  address,
+  token: {
+    address: USDC_ADDRESS as `0x${string}`,
+  },
+});
 
   const { writeContract: writeApprove, data: approveHash, isPending: isApprovePending } = useWriteContract();
   const { isSuccess: isApproveSuccess, isLoading: isApproveConfirming } = useWaitForTransactionReceipt({ hash: approveHash });
