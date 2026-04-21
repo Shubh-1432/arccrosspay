@@ -34,13 +34,12 @@ export default function PaymentPage() {
   const { switchChain } = useSwitchChain();
 
   // USDC balance
-  const { data: balance } = useBalance({
-  address,
-  token: {
-    address: USDC_ADDRESS as `0x${string}`,
-  },
-});
-
+const { data: balance } = useReadContract({
+  address: USDC_ADDRESS as `0x${string}`,
+  abi: erc20Abi,
+  functionName: 'balanceOf',
+  args: [address],
+})
   const { writeContract: writeApprove, data: approveHash, isPending: isApprovePending } = useWriteContract();
   const { isSuccess: isApproveSuccess, isLoading: isApproveConfirming } = useWaitForTransactionReceipt({ hash: approveHash });
 
