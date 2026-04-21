@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { useAccount, useConnect, useSwitchChain, useWriteContract, useWaitForTransactionReceipt, useBalance } from 'wagmi';
+import { useAccount, useConnect, useSwitchChain, useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi';
+import { erc20Abi } from 'viem';
 import { injected } from 'wagmi/connectors';
 import { arcTestnet } from 'viem/chains';
 import { parseUnits, formatUnits } from 'viem';
